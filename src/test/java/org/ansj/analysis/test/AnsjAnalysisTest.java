@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.ansj.analysis.lucene.AnsjAnalyzer;
 import org.ansj.analysis.lucene.AnsjIndexAnalyzer;
 import org.ansj.analysis.lucene.AnsjSearchAnalyzer;
 import org.ansj.analysis.lucene.util.StopwordsUtil;
@@ -29,6 +30,23 @@ public class AnsjAnalysisTest {
 		}
 		
 		ToAnalysis.parse("初始化词库");
+	}
+	
+	@Test
+	public void testAnsjAnalyzer() throws IOException {
+		String input = "我在首都机场虹桥路滑旱冰！玩的很Happy，很Hi！";
+		
+		System.out.print("Ansj索引时采用面向索引的分词：" + input);
+		displayTokensWithFullDetails(new AnsjAnalyzer(Version.LUCENE_36),input);
+		System.out.print("索引分词时过滤停用词");
+		displayTokensWithFullDetails(new AnsjAnalyzer(Version.LUCENE_36,null,stopwords),input);
+		
+		System.out.println("------------------------------------------------------------");
+		
+		System.out.print("Ansj查询时采用精准分词：" + input);
+		displayTokensWithFullDetails(new AnsjAnalyzer(Version.LUCENE_36,ToAnalysis.class),input);
+		System.out.print("查询分词时过滤停用词");
+		displayTokensWithFullDetails(new AnsjAnalyzer(Version.LUCENE_36,ToAnalysis.class,stopwords),input);
 	}
 
 	public static void main(String[] args) throws IOException {
